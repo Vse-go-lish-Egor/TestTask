@@ -16,16 +16,13 @@ export const tasksSlice = createSlice({
       state.push({completed: false, task: action.payload});
     },
     deleteTask: (state, action: PayloadAction<TaskType>) => {
-      const index = state.indexOf(action.payload);
-      console.log(index);
-      if (index > -1) {
-        state.splice(index, 1);
-      }
+      state = state.filter(({task}) => task !== action.payload.task);
       console.log(state);
+      return state;
     },
     changeCompletedState: (state, action: PayloadAction<TaskType>) => {
       state = state.map(task => {
-        if (action.payload === task) {
+        if (action.payload.task === task.task) {
           task.completed = !task.completed;
         }
         return task;

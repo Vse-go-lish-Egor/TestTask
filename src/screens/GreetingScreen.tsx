@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import Azalia from '../assets/Azalia.svg';
-import {ScreenBackgroundView} from '../components/styled-components';
+import {ScreenBackgroundView} from '../components/styledComponents';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/MainNavigation';

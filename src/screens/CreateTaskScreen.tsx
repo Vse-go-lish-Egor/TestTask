@@ -1,14 +1,27 @@
 import React, {useState} from 'react';
-import {ScreenBackgroundView, TaskText} from '../components/styled-components';
+import {ScreenBackgroundView, TaskText} from '../components/styledComponents';
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
-import {useAppDispatch} from '../redux/hoocks';
-import {addTask} from '../redux/slice';
+import {useAppDispatch} from '../redux/hooks';
+import {addTask} from '../redux/taskSlice';
+import BackButton from '../assets/BackButton.svg';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../navigation/MainNavigation';
+import {Text} from 'react-native';
 
 export const CreateTaskScreen = () => {
   const [task, setTask] = useState('');
   const dispatch = useAppDispatch();
+  const {navigate} =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
     <ScreenBackgroundView>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigate('MainTaskScreen')}>
+        <BackButton width={21} height={24} />
+        <Text style={styles.backButtonText}>Вернуться назад</Text>
+      </TouchableOpacity>
       <View style={styles.screenView}>
         <View style={styles.inputTaskView}>
           <TextInput
@@ -33,6 +46,17 @@ export const CreateTaskScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  backButtonText: {
+    color: '#999999',
+    fontSize: 28,
+    marginLeft: 30,
+  },
+  backButton: {
+    alignItems: 'center',
+    marginLeft: 21,
+    marginTop: 35,
+    flexDirection: 'row',
+  },
   addButtonText: {
     color: '#FFFFFF',
   },

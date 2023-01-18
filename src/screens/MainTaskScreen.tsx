@@ -1,16 +1,32 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import Azalia from '../assets/Azalia.svg';
-import {ScreenBackgroundView} from '../components/styled-components';
+import {ScreenBackgroundView} from '../components/styledComponents';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/MainNavigation';
-import {useAppSelector} from '../redux/hoocks';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import AddNewTask from '../assets/AddNewTask.svg';
-import {TasksList} from '../components/tasksList';
+import {TasksItem} from '../components/TaskItem';
+import {TaskType, changeCompletedState, deleteTask} from '../redux/taskSlice';
 import {FlatList} from 'react-native-gesture-handler';
 export const MainTaskScreen = () => {
   const tasks = useAppSelector(state => state.task);
+  const dispatch = useAppDispatch();
+  const onChangeCompletedValue = useCallback(
+    (task: TaskType) => {
+      console.log(tasks);
+      dispatch(changeCompletedState(task));
+      console.log(tasks);
+    },
+    [dispatch, tasks],
+  );
+  const onDelete = useCallback(
+    (task: TaskType) => {
+      dispatch(deleteTask(task));
+    },
+    [dispatch],
+  );
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
@@ -18,9 +34,15 @@ export const MainTaskScreen = () => {
       <View style={styles.tasksScreenView}>
         <Azalia width={234} height={36} style={styles.logo} />
         <FlatList
-          renderItem={({item}) => <TasksList task={item} />}
+          renderItem={({item}) => (
+            <TasksItem
+              onChangeCompletedValue={onChangeCompletedValue}
+              onDelete={onDelete}
+              task={item}
+            />
+          )}
           data={tasks}
-          keyExtractor={item => item.task}
+          keyExtractor={(item, index) => item.task + index}
         />
       </View>
       <View style={styles.addTaskIcon}>
@@ -54,14 +76,12 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingRight: 36,
     paddingBottom: 31,
-    zIndex: 1,
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
   },
   tasksScreenView: {
     flex: 1,
-    zIndex: 0,
     padding: 21,
     paddingTop: 90,
     backgroundColor: '#FAFAFE',
