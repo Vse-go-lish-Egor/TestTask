@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -11,23 +11,22 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import {TaskType} from '../redux/taskSlice';
+import {Task} from '../redux/slices/taskSlice';
 import {TaskText} from './styledComponents';
 import CheckBox from '@react-native-community/checkbox';
 
-interface TasksListProops {
-  task: TaskType;
-  onChangeCompletedValue: (task: TaskType) => void;
-  onDelete?: (task: TaskType) => void;
+interface Proops {
+  task: Task;
+  onToggleComplete: (task: Task) => void;
+  onDelete: (task: Task) => void;
 }
 
-const {width: screenWidth} = Dimensions.get('window');
-
-export const TasksItem: React.FC<TasksListProops> = ({
+export const TasksItem: React.FC<Proops> = ({
   task,
   onDelete,
-  onChangeCompletedValue,
+  onToggleComplete,
 }) => {
+  const {width: screenWidth} = useWindowDimensions();
   const translateX = useSharedValue(0);
   const itemHeight = useSharedValue(44);
   const margin = useSharedValue(5);
@@ -41,7 +40,7 @@ export const TasksItem: React.FC<TasksListProops> = ({
         translateX.value = withTiming(-screenWidth);
         itemHeight.value = withTiming(0);
         margin.value = withTiming(0, undefined, isFinished => {
-          if (isFinished && onDelete) {
+          if (isFinished) {
             runOnJS(removeTask)();
           }
         });
@@ -65,10 +64,10 @@ export const TasksItem: React.FC<TasksListProops> = ({
       <Animated.View style={[styles.taskView, rStyle, rTaskContainerStyle]}>
         <CheckBox
           value={task.completed}
-          onValueChange={() => onChangeCompletedValue(task)}
+          onValueChange={() => onToggleComplete(task)}
           tintColors={{false: 'black', true: 'black'}}
         />
-        <TaskText isComleted={task.completed}>{task.task}</TaskText>
+        <TaskText isComleted={task.completed}>{task.name}</TaskText>
       </Animated.View>
     </PanGestureHandler>
   );

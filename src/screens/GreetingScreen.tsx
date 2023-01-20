@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
-import Azalia from '../assets/Azalia.svg';
-import {ScreenBackgroundView} from '../components/styledComponents';
+import Azalia from '../../assets/svgImage/azalia_logo.svg';
+import {ScreenBackgroundView, SizedBox} from '../components/styledComponents';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/MainNavigation';
-import Loading from '../components/loading';
-import {StyleSheet, View} from 'react-native';
+import Loading from '../components/Loader';
+
 export const GreetingScreen = () => {
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -13,25 +13,10 @@ export const GreetingScreen = () => {
     setTimeout(() => navigate('MainTaskScreen'), 2500);
   }, [navigate]);
   return (
-    <ScreenBackgroundView>
-      <View style={styles.backgrounds}>
-        <Azalia width={234} height={36} style={styles.logo} />
-        <Loading />
-      </View>
+    <ScreenBackgroundView justifyContent="center" alignItems="center">
+      <Azalia width={234} height={36} />
+      <SizedBox height={46} />
+      <Loading height={45} width={45} />
     </ScreenBackgroundView>
   );
 };
-const styles = StyleSheet.create({
-  loading: {
-    height: 20,
-    width: 20,
-  },
-  logo: {
-    marginBottom: 46,
-  },
-  backgrounds: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

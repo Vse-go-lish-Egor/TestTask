@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {ScreenBackgroundView, TaskText} from '../components/styledComponents';
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 import {useAppDispatch} from '../redux/hooks';
-import {addTask} from '../redux/taskSlice';
-import BackButton from '../assets/BackButton.svg';
+import {addTask} from '../redux/slices/taskSlice';
+import BackButton from '../../assets/svgImage/back_button.svg';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../navigation/MainNavigation';
@@ -31,13 +31,11 @@ export const CreateTaskScreen = () => {
             placeholderTextColor={'#222F3E'}
           />
           <TouchableOpacity
+            style={task.length ? styles.addButtonOn : styles.addButtonOff}
             onPress={() => {
               task.length && dispatch(addTask(task));
             }}>
-            <View
-              style={task.length ? styles.addButtonOn : styles.addButtonOff}>
-              <TaskText style={styles.addButtonText}>Добавить</TaskText>
-            </View>
+            <TaskText style={styles.addButtonText}>Добавить</TaskText>
           </TouchableOpacity>
         </View>
       </View>
